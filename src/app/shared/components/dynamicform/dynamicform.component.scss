@@ -1,0 +1,59 @@
+$form-background: #f8f9fa;
+$form-border-radius: 8px;
+$form-padding: 20px;
+$form-label-color: #495057;
+$form-input-border: #ced4da;
+$form-input-focus-border: #007bff;
+$form-button-bg: #000000; // Color del botón negro
+$form-button-hover-bg: #333333; // Color del botón al hacer hover
+$form-button-text-color: #ffffff; // Texto del botón blanco
+
+form {
+  background-color: $form-background;
+  border-radius: $form-border-radius;
+  padding: $form-padding;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: $form-label-color;
+    font-weight: bold;
+  }
+
+  textarea,
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid $form-input-border;
+    border-radius: $form-border-radius;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: $form-input-focus-border;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+  }
+
+  button[type="submit"] {
+    background-color: $form-button-bg;
+    color: $form-button-text-color;
+    border: none;
+    border-radius: $form-border-radius;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $form-button-hover-bg;
+    }
+
+    &:disabled {
+      background-color: lighten($form-button-bg, 10%);
+      cursor: not-allowed;
+    }
+  }
+}

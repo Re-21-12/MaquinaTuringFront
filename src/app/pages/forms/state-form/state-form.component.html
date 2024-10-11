@@ -1,0 +1,9 @@
+<app-dynamicheader
+  [titulo]="'Formulario'"
+  [subtitulo]="'Formulario de Estados'"
+></app-dynamicheader>
+<app-dynamic-form
+  [formName]="'stateForm'"
+  [submit_text]="'Subir'"
+  (formSubmit)="submit($event)"
+></app-dynamic-form>

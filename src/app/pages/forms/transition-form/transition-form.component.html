@@ -1,0 +1,9 @@
+<app-dynamicheader
+  [titulo]="'Formulario'"
+  [subtitulo]="'Formulario de transiciones'"
+></app-dynamicheader>
+<app-dynamic-form
+  [formName]="'transitionForm'"
+  [submit_text]="'Subir'"
+  (formSubmit)="submit($event)"
+></app-dynamic-form>

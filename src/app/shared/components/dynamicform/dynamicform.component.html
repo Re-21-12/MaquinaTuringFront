@@ -1,0 +1,42 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  @if (formConfig == "404Form") {
+  <p>Formulario no encontrado</p>
+  } @for( field of formConfig.fields; track field.name ){
+  <label [for]="field.name">{{ field.label }}</label>
+  @switch (field.type) {
+  <!-- Renderiza textareas -->
+  @case ("textarea") {
+  <textarea
+    [formControlName]="field.name"
+    [placeholder]="field.placeholder"
+    [readonly]="field.readOnly || false"
+  >
+  </textarea>
+  } @case ("text") {
+  <input
+    [formControlName]="field.name"
+    [placeholder]="field.placeholder"
+    [readonly]="field.readOnly || false"
+    type="text"
+  />
+  } @case ( "select" ) {
+  <select [formControlName]="field.name" title="field.title">
+    @for( option of field.options; track option.value){
+    <option [value]="option.value">
+      {{ option.label }}
+    </option>
+    }
+  </select>
+  } @case ("checkbox") {
+  <input type="checkbox" [formControlName]="field.name" title="field.title" />
+  {{ field.label }}
+  } }
+  <!-- @if(form.get(field.name).invalid && form.get(field.name).touched){
+  <p class="error-message">Campo requerido o inválido</p>
+  } -->
+  <!-- Renderiza inputs -->
+  }@empty {
+  <p>Sin campos</p>
+  }
+  <button type="submit" [disabled]="!form.valid">{{ submit_text }}</button>
+</form>

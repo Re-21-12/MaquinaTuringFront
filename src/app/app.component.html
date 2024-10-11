@@ -1,28 +1,27 @@
 <!-- Navbar se muestra siempre en la parte superior -->
-<mat-drawer-container class="example-container bg-sky-200">
-  <mat-drawer #drawer mode="side" class="content-side mat-elevation-z8">
-    <!-- Aquí debería ir una lista -->
-    <app-navlist drawer></app-navlist>
-  </mat-drawer>
-
-  <div class="example-sidenav-content">
-    <!-- Aquí es donde se muestra el contenido del router outlet -->
-    <div class="content mat-elevation-z10 flex flex-col">
-      <button
-        type="button"
-        mat-button
-        (click)="drawer.toggle()"
-        class="flex justify-start ml-4 mt-4"
-      >
-        <mat-icon
-          aria-hidden="false"
-          aria-label="Example home icon"
-          fontIcon="menu_open"
-        ></mat-icon>
-      </button>
-      <div class="w-full flex justify-center items-center h-full">
-        <router-outlet></router-outlet>
+<main>
+  <mat-drawer-container class="example-container bg-sky-200">
+    <mat-drawer #drawer mode="side" class="content-side mat-elevation-z8">
+      <!-- Aquí debería ir una lista -->
+      <app-navlist drawer></app-navlist>
+    </mat-drawer>
+    <div class="example-sidenav-content">
+      <!-- Aquí es donde se muestra el contenido del router outlet -->
+      <div class="content mat-elevation-z10 flex flex-col">
+        <h1 class="text-center text-4xl">Maquina de Turing</h1>
+        <button
+          type="button"
+          mat-button
+          (click)="drawer.toggle()"
+          class="flex justify-start ml-4 mt-4"
+        >
+          <mat-icon fontIcon="menu_open">menu_open</mat-icon>
+        </button>
+        <div class="w-full flex justify-center items-center h-full">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
-  </div>
-</mat-drawer-container>
+  </mat-drawer-container>
+</main>
+<app-footer></app-footer>

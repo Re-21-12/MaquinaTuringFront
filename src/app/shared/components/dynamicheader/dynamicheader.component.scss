@@ -1,0 +1,23 @@
+$header-h2-color: #587797; // Color azul para el h2 (se puede ajustar)
+$header-h3-color: #6c757d; // Color gris para el h3 (se puede ajustar)
+$header-h2-font-size: 24px;
+$header-h3-font-size: 18px;
+$header-font-family: 'Victor Mono'; // Fuente común, personalizable
+
+h2 {
+  color: $header-h2-color;
+  font-size: $header-h2-font-size;
+  font-family: $header-font-family;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase; // Opcional, para que todo el texto esté en mayúsculas
+}
+
+h3 {
+  color: $header-h3-color;
+  font-size: $header-h3-font-size;
+  font-family: $header-font-family;
+  font-weight: normal;
+  margin-bottom: 0.75rem;
+  font-style: italic; // Opcional, agrega un estilo cursivo
+}

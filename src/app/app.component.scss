@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Importar Fira Code de Nerd Font */
-
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap') ;
 :root {
     --background-color: #278dbd; /* Corrección de typo */
 }
@@ -21,7 +21,10 @@
     font-size: 1em;
     color: black;
 }
-
+h1{
+    margin-top: 2rem;
+    font-family: 'Fira Code', monospace; /* Aplicar la fuente aquí */
+}
 .content-side {
     height: calc(100vh - 98px);
     border-radius: 10px;
