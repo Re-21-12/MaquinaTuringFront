@@ -1,42 +1,45 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  @if (formConfig == "404Form") {
-  <p>Formulario no encontrado</p>
-  } @for( field of formConfig.fields; track field.name ){
-  <label [for]="field.name">{{ field.label }}</label>
-  @switch (field.type) {
-  <!-- Renderiza textareas -->
-  @case ("textarea") {
-  <textarea
-    [formControlName]="field.name"
-    [placeholder]="field.placeholder"
-    [readonly]="field.readOnly || false"
-  >
+<section class="flex w-[50rem]">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full">
+    @if (formConfig == "404Form") {
+    <p>Formulario no encontrado</p>
+    } @for( field of formConfig.fields; track field.name ){
+    <label [for]="field.name">{{ field.label }}</label>
+    @switch (field.type) {
+    <!-- Renderiza textareas -->
+    @case ("textarea") {
+    <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
+      title="{{ field.title }}">
   </textarea>
-  } @case ("text") {
-  <input
-    [formControlName]="field.name"
-    [placeholder]="field.placeholder"
-    [readonly]="field.readOnly || false"
-    type="text"
-  />
-  } @case ( "select" ) {
-  <select [formControlName]="field.name" title="field.title">
-    @for( option of field.options; track option.value){
-    <option [value]="option.value">
-      {{ option.label }}
-    </option>
-    }
-  </select>
-  } @case ("checkbox") {
-  <input type="checkbox" [formControlName]="field.name" title="field.title" />
-  {{ field.label }}
-  } }
-  <!-- @if(form.get(field.name).invalid && form.get(field.name).touched){
+    } @case ("text") {
+    <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
+      title="{{ field.title }}" type="text" />
+    } @case ( "select" ) {
+    <select [formControlName]="field.name" title="field.title">
+      @for( option of field.options; track option.value){
+      <option [value]="option.value">
+        {{ option.label }}
+      </option>
+      }
+    </select>
+    } @case ("checkbox") {
+    <section>
+      <mat-checkbox [formControlName]="field.name" title="{{ field.label }}" class="">
+        <i class="text-neutral-400">{{ field.label }}</i>
+      </mat-checkbox>
+    </section>
+
+    } }
+    <hr />
+    <!-- @if(form.get(field.name).invalid && form.get(field.name).touched){
   <p class="error-message">Campo requerido o inválido</p>
   } -->
-  <!-- Renderiza inputs -->
-  }@empty {
-  <p>Sin campos</p>
-  }
-  <button type="submit" [disabled]="!form.valid">{{ submit_text }}</button>
-</form>
+    <!-- Renderiza inputs -->
+    }@empty {
+    <p>Sin campos</p>
+    }
+    <div class="flex justify-end">
+
+      <button type="submit" [disabled]="!form.valid" class=" ">{{ submit_text }}</button>
+    </div>
+  </form>
+</section>
