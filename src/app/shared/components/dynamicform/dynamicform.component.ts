@@ -12,6 +12,7 @@ import {
   FormControl,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { Forms } from '../../Models/form';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -32,7 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   ],
   templateUrl: './dynamicform.component.html',
   styleUrls: ['./dynamicform.component.scss'],
-  providers: [FormBuilder],
+  providers: [FormBuilder,Validators],
 })
 export class DynamicFormComponent implements OnInit {
   form: FormGroup = new FormGroup({});
@@ -58,37 +59,72 @@ export class DynamicFormComponent implements OnInit {
       if (field.type === 'checkboxList') {
         const checkboxGroup = this.fb.group({});
         field.checkboxes.forEach((checkbox: any) => {
-          const isVacio = checkbox.name === 'vacío';
-          checkboxGroup.addControl(checkbox.name, new FormControl({
-            value: isVacio, // Marca 'vacío' como true por defecto
-            disabled: isVacio // Deshabilita 'vacío'
-          }));
+          if (checkbox.name === 'vacío') {
+            // Deshabilitar y marcar el campo "vacío"
+            checkboxGroup.addControl(checkbox.name, new FormControl({ value: true, disabled: true }));
+          } else {
+            checkboxGroup.addControl(checkbox.name, new FormControl(false));
+          }
         });
         group[field.name] = checkboxGroup;
       } else {
-        group[field.name] = new FormControl({
-          value: '',
-          disabled: field.disabled || false
-        });
+        const validators = this.getValidators(field);
+        group[field.name] = new FormControl('', validators);
       }
     });
   
     this.form = this.fb.group(group);
   }
+  
+  
+
+  getValidators(field: any) {
+    const validators = [];
+    if (field.required) {
+      validators.push(Validators.required);
+    }
+    if (field.min !== undefined) {
+      validators.push(Validators.min(field.min));
+    }
+    if (field.max !== undefined) {
+      validators.push(Validators.max(field.max));
+    }
+    if (field.pattern) {
+      validators.push(Validators.pattern(field.pattern));
+    }
+    return validators;
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.form.get(fieldName);
+    if (control?.errors) {
+      if (control.errors['required']) {
+        return 'Este campo es requerido';
+      }
+      if (control.errors['min']) {
+        return `El valor mínimo es ${control.errors['min'].min}`;
+      }
+      if (control.errors['max']) {
+        return `El valor máximo es ${control.errors['max'].max}`;
+      }
+      if (control.errors['pattern']) {
+        return 'El formato no es válido';
+      }
+    }
+    return '';
+  }
 
   onSubmit() {
     if (this.form.valid) {
-      const formData = this.form.value;
-      
-      const restrictionsControl = this.form.get('Restrictions');
-      if (restrictionsControl instanceof FormGroup) {
-        const isVacioChecked = restrictionsControl.get('vacío')?.value;
-        formData.includeBlank = isVacioChecked ? 'true' : 'false';
-      }
-      
-      this.formSubmit.emit(formData);
+      this.formSubmit.emit(this.form.value);
     } else {
       console.error('Formulario inválido');
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+        }
+      });
     }
   }
 }

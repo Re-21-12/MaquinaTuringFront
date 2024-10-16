@@ -7,13 +7,14 @@ $form-input-focus-border: #007bff;
 $form-button-bg: #000000; // Color del botón negro
 $form-button-hover-bg: #333333; // Color del botón al hacer hover
 $form-button-text-color: #ffffff; // Texto del botón blanco
+$font-family: 'Victor Mono'; // Texto del botón blanco
 
 form {
   background-color: $form-background;
   border-radius: $form-border-radius;
   padding: $form-padding;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
+  font-family: $font-family;
   label {
     display: block;
     margin-bottom: 0.5rem;
@@ -55,5 +56,10 @@ form {
       background-color: lighten($form-button-bg, 10%);
       cursor: not-allowed;
     }
+  }
+  mat-error {
+    color: #f44336;
+    font-size: 1rem;
+    margin-top: 4px;
   }
 }

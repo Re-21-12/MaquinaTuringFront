@@ -55,7 +55,7 @@ export const Forms: any[] = [
       {
         name: 'isFinal',
         type: 'checkbox',
-        label: 'Estado final λ ',
+        label: 'Estado final λ',
       },
     ],
   },
@@ -79,7 +79,7 @@ export const Forms: any[] = [
       {
         name: 'entry',
         type: 'select',
-        label: 'Entrada ',
+        label: 'Entrada',
         placeholder: 'Entrada',
         optios: [],
       },
@@ -108,7 +108,6 @@ export const Forms: any[] = [
             type: 'checkbox',
             label: 'vacío',
             value: '#',
-            
           },
           {
             name: 'números',
@@ -130,7 +129,29 @@ export const Forms: any[] = [
           },
         ],
       },
-
+      {
+        name: 'Estados',
+        type: 'textarea',
+        label: 'Estados',
+        placeholder: 'Ingresa los estados Q0, Qf',
+        required: true,
+      },
+      {
+        name: 'Estado Inicial',
+        type: 'select',
+        label: 'Estado Inicial',
+        placeholder: 'Ingresa el estado inicial Q0',
+        options:[],
+        required: true,
+      },
+      {
+        name: 'Estados Finales',
+        type: 'select',
+        label: 'Estados Finales',
+        placeholder: 'Ingresa el estado final λ',
+        options:[],
+        required: true,
+      },
       {
         name: 'tapeDisplay',
         type: 'textarea',

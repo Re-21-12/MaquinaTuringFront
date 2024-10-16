@@ -5,15 +5,20 @@
     } @for( field of formConfig.fields; track field.name ){
     <label [for]="field.name">{{ field.label }}</label>
     @switch (field.type) {
-    <!-- Renderiza textareas -->
     @case ("textarea") {
     <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
       title="{{ field.title }}">
-  </textarea>
-    } @case ("text") {
+          </textarea>
+    }
+    @case ("text") {
     <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
       title="{{ field.title }}" type="text" />
-    } @case ( "select" ) {
+    }
+    @case ("number") {
+    <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
+      title="{{ field.title }}" type="number" [min]="field.min" [max]="field.max" [step]="field.step || 1" />
+    }
+    @case ("select") {
     <select [formControlName]="field.name" title="field.title">
       @for( option of field.options; track option.value){
       <option [value]="option.value">
@@ -21,7 +26,8 @@
       </option>
       }
     </select>
-    } @case ("checkboxList") {
+    }
+    @case ("checkboxList") {
     @if (form.get(field.name)) {
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -42,17 +48,16 @@
       </div>
     </mat-expansion-panel>
     }
-    } }
+    }
+    }
     <hr />
-    <!-- @if(form.get(field.name).invalid && form.get(field.name).touched){
-  <p class="error-message">Campo requerido o inválido</p>
-  } -->
-    <!-- Renderiza inputs -->
+    @if (form.get(field.name)?.invalid && (form.get(field.name)?.dirty || form.get(field.name)?.touched)) {
+    <mat-error>{{ getErrorMessage(field.name) }}</mat-error>
+    }
     }@empty {
     <p>Sin campos</p>
     }
     <div class="flex justify-end">
-
       <button type="submit" [disabled]="!form.valid" class=" ">{{ submit_text }}</button>
     </div>
   </form>
