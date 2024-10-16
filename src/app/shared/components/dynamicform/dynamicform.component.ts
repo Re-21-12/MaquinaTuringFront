@@ -1,12 +1,35 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Forms } from '../../Models/form'; // Importa la configuración de tus formularios
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Forms } from '../../Models/form';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-dynamic-form',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, MatCheckboxModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatFormFieldModule,
+  ],
   templateUrl: './dynamicform.component.html',
   styleUrls: ['./dynamicform.component.scss'],
   providers: [FormBuilder],
@@ -23,41 +46,49 @@ export class DynamicFormComponent implements OnInit {
   ngOnInit() {
     this.formConfig = Forms.find((form) => form.formName === this.formName);
     if (!this.formConfig) {
-      this.formConfig = Forms[0]; // Usa el primer formulario si no se encuentra el específico
+      this.formConfig = Forms[0];
     }
     this.initializeForm();
   }
 
   initializeForm() {
     const group: any = {};
-
+  
     this.formConfig.fields.forEach((field: any) => {
-      // Crea el FormControl y configura el estado 'disabled' si se indica en la configuración
-      const control = new FormControl({ value: '', disabled: field.disabled || false }); 
-      group[field.name] = control;
-      
-      // Puedes añadir lógica adicional aquí para habilitar/deshabilitar otros campos
-      if (field.name === 'espacio vacío') {
-        // Por ejemplo, deshabilitar 'includeBlank' al iniciar
-        control.disable();
-        control.setValue('false');
+      if (field.type === 'checkboxList') {
+        const checkboxGroup = this.fb.group({});
+        field.checkboxes.forEach((checkbox: any) => {
+          const isVacio = checkbox.name === 'vacío';
+          checkboxGroup.addControl(checkbox.name, new FormControl({
+            value: isVacio, // Marca 'vacío' como true por defecto
+            disabled: isVacio // Deshabilita 'vacío'
+          }));
+        });
+        group[field.name] = checkboxGroup;
+      } else {
+        group[field.name] = new FormControl({
+          value: '',
+          disabled: field.disabled || false
+        });
       }
     });
-
+  
     this.form = this.fb.group(group);
   }
 
   onSubmit() {
     if (this.form.valid) {
-        const formData = this.form.value;
-        
-        // Agrega manualmente el valor de includeBlank
-        formData.includeBlank = this.form.get('espacio vacío')?.disabled ? 'false' : this.form.get('includeBlank')?.value;
-
-        this.formSubmit.emit(formData);
+      const formData = this.form.value;
+      
+      const restrictionsControl = this.form.get('Restrictions');
+      if (restrictionsControl instanceof FormGroup) {
+        const isVacioChecked = restrictionsControl.get('vacío')?.value;
+        formData.includeBlank = isVacioChecked ? 'true' : 'false';
+      }
+      
+      this.formSubmit.emit(formData);
     } else {
-        console.error('Formulario inválido');
+      console.error('Formulario inválido');
     }
-}
-
+  }
 }

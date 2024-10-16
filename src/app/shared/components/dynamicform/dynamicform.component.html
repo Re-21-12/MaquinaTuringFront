@@ -21,13 +21,27 @@
       </option>
       }
     </select>
-    } @case ("checkbox") {
-    <section>
-      <mat-checkbox [formControlName]="field.name" title="{{ field.label }}" class="">
-        <i class="text-neutral-400">{{ field.label }}</i>
-      </mat-checkbox>
-    </section>
-
+    } @case ("checkboxList") {
+    @if (form.get(field.name)) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ field.name }}
+          <mat-icon>check_box</mat-icon>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div [formGroupName]="field.name">
+        <ol>
+          @for (checkbox of field.checkboxes; track checkbox.name) {
+          <li>
+            <mat-checkbox [formControlName]="checkbox.name" [title]="checkbox.label" class="">
+              <i class="text-neutral-400">{{ checkbox.label }}</i>
+            </mat-checkbox>
+          </li>
+          }
+        </ol>
+      </div>
+    </mat-expansion-panel>
+    }
     } }
     <hr />
     <!-- @if(form.get(field.name).invalid && form.get(field.name).touched){

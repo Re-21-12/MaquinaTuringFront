@@ -16,10 +16,24 @@ export const Forms: any[] = [
           { label: 'letras minúsculas', value: 'abcdefghijklmnopqsrtuvwxyz' },
           { label: 'letras mayúsculas', value: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' },
           { label: 'letras m y M', value: 'mM' },
-          { label: 'números y letras minúsculas', value: '0123456789abcdefghijklmnopqsrtuvwxyz' },
-          { label: 'números y letras mayúsculas', value: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' },
-          { label: 'números, letras minúsculas y mayúsculas', value: '0123456789abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' },
-          { label: 'números, letras minúsculas, mayúsculas y m y M', value: '0123456789abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZmM' },
+          {
+            label: 'números y letras minúsculas',
+            value: '0123456789abcdefghijklmnopqsrtuvwxyz',
+          },
+          {
+            label: 'números y letras mayúsculas',
+            value: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+          },
+          {
+            label: 'números, letras minúsculas y mayúsculas',
+            value:
+              '0123456789abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+          },
+          {
+            label: 'números, letras minúsculas, mayúsculas y m y M',
+            value:
+              '0123456789abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZmM',
+          },
         ],
       },
     ],
@@ -85,32 +99,38 @@ export const Forms: any[] = [
   {
     formName: 'turingForm',
     fields: [
- 
       {
-        name: 'espacio vacío',
-        type: 'checkbox',
-        label: 'espacio vacío',
-        value: '#',
+        name: 'Restricciones',
+        type: 'checkboxList',
+        checkboxes: [
+          {
+            name: 'vacío',
+            type: 'checkbox',
+            label: 'vacío',
+            value: '#',
+            
+          },
+          {
+            name: 'números',
+            type: 'checkbox',
+            label: 'Incluir números',
+            value: 'números',
+          },
+          {
+            name: 'letras minúsculas',
+            type: 'checkbox',
+            label: 'Incluir letras minúsculas',
+            value: 'letras minúsculas',
+          },
+          {
+            name: 'letras mayúsculas',
+            type: 'checkbox',
+            label: 'Incluir letras mayúsculas',
+            value: 'letras mayúsculas',
+          },
+        ],
       },
-      {
-        name: 'números',
-        type: 'checkbox',
-        label: 'Incluir números',
-        value:'números'
-      },
-      {
-        name: 'letras minúsculas',
-        type: 'checkbox',
-        label: 'Incluir letras minúsculas',
-        value:'letras minúsculas'
-      },
-      {
-        name: 'letras mayúsculas',
-        type: 'checkbox',
-        label: 'Incluir letras mayúsculas',
-        value:'letras mayúsculas'
-        
-      },
+
       {
         name: 'tapeDisplay',
         type: 'textarea',
@@ -118,9 +138,6 @@ export const Forms: any[] = [
         placeholder: 'Visualización de la cinta y cabezal de lectura/escritura',
         readOnly: true, // Campo solo de lectura para mostrar los resultados
       },
-
     ],
-  
   },
-
 ];
