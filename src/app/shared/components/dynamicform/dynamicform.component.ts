@@ -19,7 +19,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
+import { HotTableModule } from '@handsontable/angular';
+import { DynamicSpreadsheetComponent } from '../dynamicspreedsheat/dynamicspreedsheat.component';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-dynamic-form',
   standalone: true,
@@ -30,18 +32,24 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
+    HotTableModule,
+    DynamicFormComponent,
+    DynamicSpreadsheetComponent,
+    CommonModule
   ],
   templateUrl: './dynamicform.component.html',
   styleUrls: ['./dynamicform.component.scss'],
-  providers: [FormBuilder,Validators],
+  providers: [FormBuilder, Validators],
 })
 export class DynamicFormComponent implements OnInit {
   form: FormGroup = new FormGroup({});
   @Input() submit_text!: string;
   @Input() formName!: string;
   @Output() formSubmit = new EventEmitter<any>();
+  @Output() value = new EventEmitter<any>();
   formConfig: any;
-
+  estados: any[] = [];
+  entradas: any[] = [];
   private fb = inject(FormBuilder);
 
   ngOnInit() {
@@ -51,32 +59,48 @@ export class DynamicFormComponent implements OnInit {
     }
     this.initializeForm();
   }
+  valueChangedStates(event: Event) {
+    const inputValue = (event.target as HTMLTextAreaElement).value;
+    this.estados = inputValue.split(',');
+    console.log(this.estados);
+  }
+  valueChangedAlphabet(event: Event) {
+    const inputValue = (event.target as HTMLTextAreaElement).value;
+    this.entradas = inputValue.split(',');
+    console.log(this.entradas);
+  }
+
+
 
   initializeForm() {
     const group: any = {};
-  
+
     this.formConfig.fields.forEach((field: any) => {
-      if (field.type === 'checkboxList') {
+      const validators = this.getValidators(field); // Obtiene los validadores para cada campo
+      if (field.name === 'Estado Inicial Q0') {
+        // Inicializa el campo con un valor por defecto y validadores
+        group[field.name] = new FormControl({value:'q0', disabled:true}); // Asegúrate de que el control se crea aquí
+      } else if (field.type === 'checkboxList') {
         const checkboxGroup = this.fb.group({});
         field.checkboxes.forEach((checkbox: any) => {
           if (checkbox.name === 'vacío') {
-            // Deshabilitar y marcar el campo "vacío"
-            checkboxGroup.addControl(checkbox.name, new FormControl({ value: true, disabled: true }));
+            checkboxGroup.addControl(
+              checkbox.name,
+              new FormControl({ value: true, disabled: true })
+            );
           } else {
             checkboxGroup.addControl(checkbox.name, new FormControl(false));
           }
         });
         group[field.name] = checkboxGroup;
       } else {
-        const validators = this.getValidators(field);
-        group[field.name] = new FormControl('', validators);
+        group[field.name] = new FormControl('', validators); // Se inicializan otros controles
       }
     });
-  
-    this.form = this.fb.group(group);
-  }
-  
-  
+
+    this.form = this.fb.group(group); // Crea el grupo de formularios
+}
+
 
   getValidators(field: any) {
     const validators = [];
@@ -119,7 +143,7 @@ export class DynamicFormComponent implements OnInit {
       this.formSubmit.emit(this.form.value);
     } else {
       console.error('Formulario inválido');
-      Object.keys(this.form.controls).forEach(key => {
+      Object.keys(this.form.controls).forEach((key) => {
         const control = this.form.get(key);
         if (control?.invalid) {
           control.markAsTouched();

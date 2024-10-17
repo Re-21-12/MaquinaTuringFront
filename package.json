@@ -23,8 +23,10 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/fira-code": "^5.1.0",
+    "@handsontable/angular": "^14.6.0",
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
+    "handsontable": "^14.6.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

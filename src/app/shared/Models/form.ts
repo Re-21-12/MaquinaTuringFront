@@ -1,3 +1,4 @@
+import { Validator, Validators } from '@angular/forms';
 export const Forms: any[] = [
   {
     formName: '404Form',
@@ -99,8 +100,9 @@ export const Forms: any[] = [
   {
     formName: 'turingForm',
     fields: [
+     /*
       {
-        name: 'Restricciones',
+          name: 'Restricciones Alfabeto de Entrada',
         type: 'checkboxList',
         checkboxes: [
           {
@@ -127,8 +129,35 @@ export const Forms: any[] = [
             label: 'Incluir letras mayúsculas',
             value: 'letras mayúsculas',
           },
-        ],
+          {
+            name: 'números y letras minúsculas',
+            label: 'números y letras minúsculas',
+            type: 'checkbox',
+            value: '0123456789abcdefghijklmnopqsrtuvwxyz',
+          },
+          {
+            name: 'números y letras mayúsculas',
+            label: 'números y letras mayúsculas',
+            type: 'checkbox',
+            value: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+          },
+          {
+            name: 'números, letras minúsculas y mayúsculas',
+            label: 'números, letras minúsculas y mayúsculas',
+            type: 'checkbox',
+            value:
+              '0123456789abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+          },
+          {
+            name: 'números, letras minúsculas, mayúsculas y m y M',
+            label: 'números, letras minúsculas, mayúsculas y m y M',
+            type: 'checkbox',
+            value:
+              '0123456789abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZmM',
+          },
+        ], 
       },
+      */
       {
         name: 'Estados',
         type: 'textarea',
@@ -137,27 +166,31 @@ export const Forms: any[] = [
         required: true,
       },
       {
-        name: 'Estado Inicial',
-        type: 'select',
-        label: 'Estado Inicial',
-        placeholder: 'Ingresa el estado inicial Q0',
-        options:[],
-        required: true,
+        name: 'Estado Inicial Q0',
+        label: 'Estado Inicial Q0',
+        type: 'text',
+        placeholder: 'Ingresa el estado inicial q0',
       },
       {
         name: 'Estados Finales',
-        type: 'select',
+        type: 'text',
         label: 'Estados Finales',
         placeholder: 'Ingresa el estado final λ',
-        options:[],
         required: true,
       },
       {
-        name: 'tapeDisplay',
-        type: 'textarea',
-        label: 'Cinta y cabezal',
-        placeholder: 'Visualización de la cinta y cabezal de lectura/escritura',
-        readOnly: true, // Campo solo de lectura para mostrar los resultados
+        name: 'Alfabeto de Entrada',
+        type: 'text-alphabet',
+        label: 'Alfabeto de Entrada',
+        placeholder: 'Ingresa una lista de entradas',
+        required: true,
+      },
+
+      {
+        /* Las transiciones van en la tabla */
+        name: 'Transiciones (q0,S,L/S/R)',
+        type: 'table',
+        label: 'Transiciones (q0,S,L/S/R)',
       },
     ],
   },

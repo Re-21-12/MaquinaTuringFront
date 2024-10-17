@@ -4,6 +4,7 @@ $form-padding: 20px;
 $form-label-color: #495057;
 $form-input-border: #ced4da;
 $form-input-focus-border: #007bff;
+$form-button-bg-disabled: #4a4949; // Color del botón negro
 $form-button-bg: #000000; // Color del botón negro
 $form-button-hover-bg: #333333; // Color del botón al hacer hover
 $form-button-text-color: #ffffff; // Texto del botón blanco
@@ -15,6 +16,8 @@ form {
   padding: $form-padding;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: $font-family;
+  transition: background-color 0.3s ease; // Transición para el fondo del formulario
+
   label {
     display: block;
     margin-bottom: 0.5rem;
@@ -29,12 +32,13 @@ form {
     margin-bottom: 1rem;
     border: 1px solid $form-input-border;
     border-radius: $form-border-radius;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease; // Transición para el color de fondo y el borde
 
     &:focus {
       border-color: $form-input-focus-border;
       outline: none;
       box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      background-color: lighten($form-background, 5%); // Cambia el color de fondo en foco
     }
   }
 
@@ -46,17 +50,22 @@ form {
     padding: 10px 15px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease; // Transición para el color del botón
 
     &:hover {
       background-color: $form-button-hover-bg;
     }
 
-    &:disabled {
-      background-color: lighten($form-button-bg, 10%);
+    &:active {
+      background-color: darken($form-button-bg, 10%);
       cursor: not-allowed;
     }
+
+    &:disabled {
+      background-color: lighten($form-button-bg-disabled, 10%);
+    }
   }
+
   mat-error {
     color: #f44336;
     font-size: 1rem;

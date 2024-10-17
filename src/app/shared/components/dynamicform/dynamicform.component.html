@@ -7,12 +7,16 @@
     @switch (field.type) {
     @case ("textarea") {
     <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
-      title="{{ field.title }}">
+      title="{{ field.title }}" (input)="valueChangedStates($event)">
           </textarea>
     }
     @case ("text") {
     <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
-      title="{{ field.title }}" type="text" />
+      title="{{ field.title }}" type="text" [value]="field.value" />
+    }
+    @case ("text-alphabet") {
+    <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
+      title="{{ field.title }}" type="textarea" (input)="valueChangedAlphabet($event)"></textarea>
     }
     @case ("number") {
     <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
@@ -48,6 +52,8 @@
       </div>
     </mat-expansion-panel>
     }
+    }@case ("table") {
+    <app-dynamic-spreadsheet [states]="estados" [alphabetTape]="entradas"></app-dynamic-spreadsheet>
     }
     }
     <hr />
@@ -58,7 +64,10 @@
     <p>Sin campos</p>
     }
     <div class="flex justify-end">
-      <button type="submit" [disabled]="!form.valid" class=" ">{{ submit_text }}</button>
+      <button type="submit" [disabled]="!form.valid" class="">
+        {{ submit_text }}
+      </button>
+
     </div>
   </form>
 </section>
