@@ -1,11 +1,7 @@
 <mat-nav-list>
   <!-- Opción Home -->
   <mat-list-item>
-    <a
-      class="menu-icons"
-      [routerLink]="['/home']"
-      routerLinkActive="router-link-active"
-    >
+    <a class="menu-icons" [routerLink]="['/home']" routerLinkActive="router-link-active">
       <mat-icon>home</mat-icon>
       <span>Home</span>
     </a>
@@ -18,52 +14,15 @@
       <span>Formulario</span>
       <mat-icon class="expand-icon">{{
         isFormMenuOpen ? "expand_less" : "expand_more"
-      }}</mat-icon>
+        }}</mat-icon>
     </a>
   </mat-list-item>
 
   <!-- Submenú del Formulario -->
   @if(isFormMenuOpen){
   <ng-container>
-    <!-- Alfabetos -->
     <mat-list-item>
-      <a
-        class="submenu-icons"
-        [routerLink]="['/forms/alphabetForm']"
-        routerLinkActive="router-link-active"
-      >
-        <mat-icon>subdirectory_arrow_right</mat-icon>
-        <span>Nuevo Alfabeto</span>
-      </a>
-    </mat-list-item>
-    <!-- Transiciones -->
-    <mat-list-item>
-      <a
-        class="submenu-icons"
-        [routerLink]="['/forms/transitionForm']"
-        routerLinkActive="router-link-active"
-      >
-        <mat-icon>subdirectory_arrow_right</mat-icon>
-        <span>Nueva Transicion</span>
-      </a>
-    </mat-list-item>
-    <!-- Estados -->
-    <mat-list-item>
-      <a
-        class="submenu-icons"
-        [routerLink]="['/forms/stateForm']"
-        routerLinkActive="router-link-active"
-      >
-        <mat-icon>subdirectory_arrow_right</mat-icon>
-        <span>Nuevo Estado</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item>
-      <a
-        class="submenu-icons"
-        [routerLink]="['/form']"
-        routerLinkActive="router-link-active"
-      >
+      <a class="submenu-icons" [routerLink]="['/form']" routerLinkActive="router-link-active">
         <mat-icon>subdirectory_arrow_right</mat-icon>
         <span>Nueva Maquina de Turing</span>
       </a>
@@ -75,11 +34,7 @@
 
   <!-- Opción Documentación -->
   <mat-list-item>
-    <a
-      class="menu-icons"
-      [routerLink]="['/doc']"
-      routerLinkActive="router-link-active"
-    >
+    <a class="menu-icons" [routerLink]="['/doc']" routerLinkActive="router-link-active">
       <mat-icon>document_scanner</mat-icon>
       <span>Documentación</span>
     </a>

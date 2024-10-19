@@ -41,7 +41,10 @@ form {
       background-color: lighten($form-background, 5%); // Cambia el color de fondo en foco
     }
   }
-
+  .txt-hint{
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
   button[type="submit"] {
     background-color: $form-button-bg;
     color: $form-button-text-color;

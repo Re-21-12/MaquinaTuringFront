@@ -1,4 +1,16 @@
 import { Validator, Validators } from '@angular/forms';
+export interface option  {
+  key: string;
+  value: string;
+}
+export interface checkbox{
+  name: string
+  type: string
+  label: string,
+  value: string,
+  key:string,
+}
+
 export const Forms: any[] = [
   {
     formName: '404Form',
@@ -100,8 +112,8 @@ export const Forms: any[] = [
   {
     formName: 'turingForm',
     fields: [
-     /*
-      {
+     
+    /*   {
           name: 'Restricciones Alfabeto de Entrada',
         type: 'checkboxList',
         checkboxes: [
@@ -156,8 +168,8 @@ export const Forms: any[] = [
               '0123456789abcdefghijklmnopqsrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZmM',
           },
         ], 
-      },
-      */
+      }, */
+      
       {
         name: 'Estados',
         type: 'textarea',
@@ -173,10 +185,15 @@ export const Forms: any[] = [
       },
       {
         name: 'Estados Finales',
-        type: 'text',
-        label: 'Estados Finales',
+        type: 'checkboxes',
         placeholder: 'Ingresa el estado final λ',
+        options:[] as checkbox[],
         required: true,
+      },
+      {
+        name: 'Simbolo Blanco',
+        label: 'Simbolo Blanco',
+        type: 'text',
       },
       {
         name: 'Alfabeto de Entrada',
@@ -185,12 +202,20 @@ export const Forms: any[] = [
         placeholder: 'Ingresa una lista de entradas',
         required: true,
       },
+      {
+        name: 'Alfabeto de La Cinta',
+        type: 'text',
+        label: 'Alfabeto de la Cinta',
+        placeholder: 'Entrada a evaluar',
+        required: true,
+      },
 
       {
         /* Las transiciones van en la tabla */
         name: 'Transiciones (q0,S,L/S/R)',
         type: 'table',
         label: 'Transiciones (q0,S,L/S/R)',
+        
       },
     ],
   },

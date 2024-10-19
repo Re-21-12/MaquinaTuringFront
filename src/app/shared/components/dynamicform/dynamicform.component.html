@@ -2,21 +2,41 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full">
     @if (formConfig == "404Form") {
     <p>Formulario no encontrado</p>
-    } @for( field of formConfig.fields; track field.name ){
+    } @for (field of formConfig.fields; track field.name) {
     <label [for]="field.name">{{ field.label }}</label>
     @switch (field.type) {
     @case ("textarea") {
     <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
-      title="{{ field.title }}" (input)="valueChangedStates($event)">
-          </textarea>
+      title="{{ field.title }}" (input)="valueChangedStates($event)" [value]="field.value" (input)="setSelect($event)">
+    </textarea>
+
+    <mat-hint class="txt-hint">Debe ingresar los datos separados por comas (,)</mat-hint>
     }
     @case ("text") {
+
     <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
       title="{{ field.title }}" type="text" [value]="field.value" />
+
+    }
+    @case ("text-finals") {
+
+    <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
+      title="{{ field.title }}" type="text" [value]="field.value" />
+    <ul>
+      <li>
+        <mat-hint class="txt-hint"> - Debe ingresar los datos separados por comas (,)</mat-hint>
+      </li>
+      <li>
+        <mat-hint class="txt-hint"> - Q0 no cuenta como estado final</mat-hint>
+      </li>
+    </ul>
+
+
     }
     @case ("text-alphabet") {
     <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
       title="{{ field.title }}" type="textarea" (input)="valueChangedAlphabet($event)"></textarea>
+    <mat-hint class="txt-hint">Debe ingresar los datos separados por comas (,)</mat-hint>
     }
     @case ("number") {
     <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
@@ -24,12 +44,35 @@
     }
     @case ("select") {
     <select [formControlName]="field.name" title="field.title">
-      @for( option of field.options; track option.value){
-      <option [value]="option.value">
-        {{ option.label }}
+      @for (option of optionState; track option) {
+      <option [value]="option">
+        {{ option }}
       </option>
       }
     </select>
+    }
+
+    @case ("checkboxes") {
+    @if (form.get(field.name)) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ field.name }}
+          <mat-icon>check_box</mat-icon>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div [formGroupName]="field.name">
+        <ol>
+          @for (option of optionState; track option.name) {
+          <li>
+            <mat-checkbox [formControlName]="option.name">
+              {{ option.label }}
+            </mat-checkbox>
+          </li>
+          }
+        </ol>
+      </div>
+    </mat-expansion-panel>
+    }
     }
     @case ("checkboxList") {
     @if (form.get(field.name)) {
@@ -52,22 +95,30 @@
       </div>
     </mat-expansion-panel>
     }
-    }@case ("table") {
-    <app-dynamic-spreadsheet [states]="estados" [alphabetTape]="entradas"></app-dynamic-spreadsheet>
+    }
+    @case ("table") {
+    <div class="">
+      <form (submit)="onTableChange($event)">
+        <hot-table [settings]="settings" [hotId]="'my-handsontable'" #hotTableRef [data]="this.generateData()"
+          [rowHeaders]="this.customRowHeaders" [colHeaders]="this.customColumnHeaders">
+        </hot-table>
+        <button mat-flat-button class="mt-4 align-middle justify-end">Guardar Data</button>
+      </form>
+    </div>
     }
     }
     <hr />
     @if (form.get(field.name)?.invalid && (form.get(field.name)?.dirty || form.get(field.name)?.touched)) {
     <mat-error>{{ getErrorMessage(field.name) }}</mat-error>
     }
-    }@empty {
+    } @empty {
     <p>Sin campos</p>
     }
+
     <div class="flex justify-end">
-      <button type="submit" [disabled]="!form.valid" class="">
+      <button type="submit" [disabled]="!form.valid" class="mt-4 align-middle">
         {{ submit_text }}
       </button>
-
     </div>
   </form>
 </section>
