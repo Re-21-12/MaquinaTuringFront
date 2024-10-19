@@ -29,6 +29,13 @@ import { MatButtonModule } from '@angular/material/button';
 import Handsontable from 'handsontable/base';
 import { registerAllModules } from 'handsontable/registry';
 import { checkbox } from '../../Models/form';
+import { NgOptimizedImage } from '@angular/common';
+import { MachinesService } from '../../../api/turing-machine/machines.service';
+import {
+  MAQUINA_TURING as IMAQUINA_TURING,
+  TransicionAutomata,
+} from '../../Models/turingMachineModels';
+import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-dynamic-form',
   standalone: true,
@@ -42,12 +49,16 @@ import { checkbox } from '../../Models/form';
     HotTableModule,
     CommonModule,
     MatButtonModule,
+    NgOptimizedImage,
+    HttpClientModule,
   ],
   templateUrl: './dynamicform.component.html',
   styleUrls: ['./dynamicform.component.scss'],
-  providers: [FormBuilder, Validators],
+  providers: [FormBuilder, Validators, MachinesService],
 })
 export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
+  private readonly turingMachineService = inject(MachinesService);
+
   form: FormGroup = new FormGroup({});
   @Input() submit_text!: string;
   @Input() formName!: string;
@@ -59,11 +70,18 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
   tableData: any;
   optionState: checkbox[] = [];
   @ViewChild('hotTableRef') hotTableRef!: HotTableComponent;
-  MAQUINA_TURING = {
-    datos: {},
-    transiciones: [],
-  };
 
+  TRANSICIONES: TransicionAutomata[] = [];
+
+  MAQUINA_TURING: IMAQUINA_TURING = {
+    datos: {
+      Estados: '',
+      'Estados Finales': '',
+      'Alfabeto de Entrada': '',
+      'Alfabeto Cinta': '',
+    },
+    transiciones: this.TRANSICIONES,
+  };
   private fb = inject(FormBuilder);
 
   ngOnInit() {
@@ -108,19 +126,106 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
     this.updateHotTableSettings();
   }
 
+  onInputTextTape(event: Event) {
+    const inputValue = (event.target as HTMLInputElement).value;
+    this.MAQUINA_TURING.datos['Alfabeto Cinta'] = inputValue;
+    console.log(this.MAQUINA_TURING.datos['Alfabeto Cinta']);
+  }
+
+  onSubmit() {
+    if (this.form.valid) {
+      const formValue = { ...this.form.value };
+
+      // Process Estados Finales
+      if (formValue['Estados Finales']) {
+        formValue['Estados Finales'] = Object.keys(formValue['Estados Finales'])
+          .filter((key) => formValue['Estados Finales'][key])
+          .join(',');
+      }
+
+      // Process other fields as needed
+      this.MAQUINA_TURING.datos = formValue;
+      console.log(this.MAQUINA_TURING.datos);
+
+      this.submitTuringMachine(this.MAQUINA_TURING.datos);
+      /*  this.formSubmit.emit(formValue); */
+    } else {
+      console.error('Formulario inválido');
+      Object.keys(this.form.controls).forEach((key) => {
+        const control = this.form.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+        }
+      });
+    }
+  }
+
+  async submitTuringMachine(data: any) {
+    const turingMachine = {
+      estados: data['Estados'],
+      estadosFinales: data['Estados Finales'],
+      alfabetoCinta: data!['Alfabeto Cinta'],
+      alfabetoEntrada: data['Alfabeto de Entrada'],
+      transicionesAutomata: data['Transiciones'],
+    };
+
+    const transiciones: TransicionAutomata[] = this.TRANSICIONES.map(
+      (t, index) => ({
+        idDatosAutomata: 0, // Se asignará después de crear los datos del autómata
+        fila: Math.floor(index / this.estados.length),
+        columna: index % this.estados.length,
+        valor: ``,
+        idDatosAutomataNavigation: turingMachine,
+      })
+    );
+
+    turingMachine.transicionesAutomata = transiciones.map((t) => t.valor);
+
+    console.log(data['Alfabeto de la Cinta']);
+
+    let res = await this.turingMachineService
+      .createTuringMachine(turingMachine)
+      .subscribe({
+        next: (response) => {
+          console.log('Maquina de turing creada exitosamente!', response);
+          this.submitTransitions(transiciones, response?.id);
+        },
+        error: (error) => {
+          console.error('Error al crear la Maquina de Turing:', error);
+        },
+      });
+  }
+
+  submitTransitions(
+    transiciones: TransicionAutomata[],
+    idDatosAutomata: number | undefined
+  ) {
+    transiciones.forEach((transicion) => {
+      if (idDatosAutomata) transicion.idDatosAutomata = idDatosAutomata;
+      this.turingMachineService.createTransicionAutomata(transicion).subscribe({
+        next: (response) => {
+          console.log('Transición creada exitosamente:', response);
+        },
+        error: (error) => {
+          console.error('Error al crear la transición:', error);
+        },
+      });
+    });
+  }
+
   initializeForm() {
     const group: any = {};
 
     this.formConfig.fields.forEach((field: any) => {
       const validators = this.getValidators(field);
-      if (field.name === 'Estados') {
+      if (field.name === 'Alfabeto de la Cinta') {
+        group[field.name] = new FormControl('', this.getValidators(field));
+      } else if (field.name === 'Estados') {
         group[field.name] = new FormControl({ value: 'q0', disabled: false });
       } else if (field.name === 'Estado Inicial Q0') {
         group[field.name] = new FormControl({ value: 'q0', disabled: true });
       } else if (field.name === 'Simbolo Blanco') {
         group[field.name] = new FormControl({ value: '#', disabled: true });
-      } else if (field.name === 'Alfabeto de Entrada') {
-        group[field.name] = new FormControl({ value: '#', disabled: false });
       } else if (field.name === 'Estados Finales') {
         const estadosFinalesGroup = this.fb.group({});
         this.optionState.forEach((option: checkbox) => {
@@ -210,33 +315,6 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
     return '';
   }
 
-  onSubmit() {
-    if (this.form.valid) {
-      const formValue = { ...this.form.value };
-
-      // Process Estados Finales
-      if (formValue['Estados Finales']) {
-        formValue['Estados Finales'] = Object.keys(formValue['Estados Finales'])
-          .filter((key) => formValue['Estados Finales'][key])
-          .join(',');
-      }
-
-      // Process other fields as needed
-      this.MAQUINA_TURING.datos = formValue;
-      console.log(JSON.stringify(this.MAQUINA_TURING));
-
-      this.formSubmit.emit(formValue);
-    } else {
-      console.error('Formulario inválido');
-      Object.keys(this.form.controls).forEach((key) => {
-        const control = this.form.get(key);
-        if (control?.invalid) {
-          control.markAsTouched();
-        }
-      });
-    }
-  }
-
   customRowHeaders = (rowIndex: any) => {
     const alphabet = this.entradas;
     // Puedes mostrar números o letras. Aquí mostramos letras de A-Z
@@ -262,8 +340,19 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
   onTableChange = (event: any) => {
     event.preventDefault();
     this.tableData = this.hotTableRef.data;
-    this.MAQUINA_TURING.transiciones = this.tableData;
-    console.log(this.tableData);
+    this.TRANSICIONES = this.tableData.flatMap((row: any, rowIndex: number) => 
+      row.map((cell: any, colIndex: number) => {
+        if (cell) {
+          return {
+            nuevoEstado: cell.nuevoEstado || '',
+            nuevoSimbolo: cell.nuevoSimbolo || '',
+            movimiento: cell.movimiento || ''
+          };
+        }
+        return null;
+      }).filter((transition: any) => transition !== null)
+    );
+    console.log('Transiciones:', this.TRANSICIONES);
   };
 
   settings: Handsontable.GridSettings = {

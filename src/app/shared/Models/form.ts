@@ -194,6 +194,7 @@ export const Forms: any[] = [
         name: 'Simbolo Blanco',
         label: 'Simbolo Blanco',
         type: 'text',
+        hint: 'Pertenece al lenguaje de la cinta (Entrada a evaluar)'
       },
       {
         name: 'Alfabeto de Entrada',
@@ -203,9 +204,9 @@ export const Forms: any[] = [
         required: true,
       },
       {
-        name: 'Alfabeto de La Cinta',
-        type: 'text',
-        label: 'Alfabeto de la Cinta',
+        name: 'Alfabeto Cinta',
+        type: 'text-tape',
+        label: 'Alfabeto Cinta',
         placeholder: 'Entrada a evaluar',
         required: true,
       },
@@ -215,7 +216,7 @@ export const Forms: any[] = [
         name: 'Transiciones (q0,S,L/S/R)',
         type: 'table',
         label: 'Transiciones (q0,S,L/S/R)',
-        
+
       },
     ],
   },
