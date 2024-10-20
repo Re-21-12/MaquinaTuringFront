@@ -19,7 +19,7 @@
             <td>{{ machine.alfabetoEntrada }}</td>
             <td>{{ machine.alfabetoCinta }}</td>
             <td>{{ machine.transiciones }}</td>
-            <td></td>
+            <td><a mat-raised-button (click)="navigate(machine.id)">Ejecutar</a></td>
         </tr>
         }
     </tbody>

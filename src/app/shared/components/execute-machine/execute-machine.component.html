@@ -1,0 +1,33 @@
+<div class="turing-machine bg-white rounded-md">
+    <div class="visualization-area">
+        <div class="tape">
+            @for(cell of tape; track i; let i = $index) {
+            <span [class.head]="i === headPosition" [class.accepted]="isAccepted && i === tape.length - 1">
+                {{ cell }}
+            </span>
+            }
+            @if(headPosition >= 0 && headPosition < tape.length){ <!-- Flecha que indica la posición del cabezal -->
+                <!-- Ajusta el valor 30 según el ancho de tu celda -->
+                <mat-icon class="arrow" [style.left.px]="headPosition * 40 + 5">arrow_drop_down</mat-icon>
+                }
+        </div>
+        <div class="head text-center">Cabezal: {{ currentState }}</div>
+    </div>
+
+    <div class="controls flex justify-evenly">
+        <button (click)="step()">Paso</button>
+        <button (click)="run()">Ejecutar hasta el final</button>
+        <button (click)="reset()">Reiniciar</button>
+    </div>
+
+    <div class="simulation-info flex justify-between gap-4">
+        <div class="w-1/2">
+            <p>Estado Actual: {{ currentState }}</p>
+            <p>Contenido de la Cinta: {{ tape.join('') }}</p>
+        </div>
+        <div class="w-1/2">
+            <p>Posición del Cabezal: {{ headPosition }}</p>
+            <p>Resultado: {{ resultMessage }}</p>
+        </div>
+    </div>
+</div>

@@ -28,6 +28,15 @@ export class MachinesService {
       }
     );
   }
+  getTuringMachine(id:any): Observable<TuringMachine> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const url = `${this.aoiUrlTuringMachine}/${id}`;
+    return this.http.get<TuringMachine>(url, {
+      headers,
+    });
+  }
   getTuringMachines(): Observable<TuringMachine[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

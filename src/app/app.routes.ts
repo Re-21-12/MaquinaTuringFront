@@ -11,6 +11,11 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'execute/:id',
+    loadComponent: () => import('../app/shared/components/execute-machine/execute-machine.component').then(m => m.ExecuteMachineComponent),
+    title: 'Ejecutar Maquina de Turing' /* Bromita  */,
+  },
+  {
     path: 'list',
     loadComponent: () => import('../app/pages/turing-list/turing-list.component').then(m => m.TuringListComponent),
     title: 'Listado de Formularios de Turing' /* Bromita  */,
