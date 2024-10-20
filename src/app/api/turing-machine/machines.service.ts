@@ -1,6 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { TransicionAutomata, TuringMachine } from '../../shared/Models/turingMachineModels';
+import {
+  TransicionAutomata,
+  TuringMachine,
+} from '../../shared/Models/turingMachineModels';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,8 +15,8 @@ export class MachinesService {
     'https://localhost:7044/api/TuringMachines';
   private readonly aoiUrlTransitions =
     'https://localhost:7044/api/TransicionesAutomatums';
-  
-    createTuringMachine(turingMachine: TuringMachine): Observable<TuringMachine> {
+
+  createTuringMachine(turingMachine: TuringMachine): Observable<TuringMachine> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -25,11 +28,25 @@ export class MachinesService {
       }
     );
   }
-
-  createTransicionAutomata(transicion: TransicionAutomata): Observable<TransicionAutomata> {
+  getTuringMachines(): Observable<TuringMachine[]> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
-    return this.http.post<TransicionAutomata>(this.aoiUrlTransitions, transicion, { headers });
+    return this.http.get<TuringMachine[]>(this.aoiUrlTuringMachine, {
+      headers,
+    });
+  }
+
+  createTransicionAutomata(
+    transicion: TransicionAutomata
+  ): Observable<TransicionAutomata> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post<TransicionAutomata>(
+      this.aoiUrlTransitions,
+      transicion,
+      { headers }
+    );
   }
 }

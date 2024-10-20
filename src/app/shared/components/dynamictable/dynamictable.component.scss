@@ -1,0 +1,121 @@
+$primary-color: #3498db;
+$secondary-color: #2c3e50;
+$hover-color: #f1f8ff;
+$border-color: #ddd;
+$animation-duration: 0.3s;
+
+// Estilo de la tabla
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Sombra suave alrededor de la tabla
+  animation: fadeIn $animation-duration ease-in; // Animación al cargar
+
+  // Encabezado de la tabla
+  thead {
+    background-color: $primary-color;
+    color: white;
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid $border-color;
+      animation: slideInFromTop $animation-duration ease-in; // Animación al cargar encabezado
+    }
+  }
+
+  // Cuerpo de la tabla
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      &:hover {
+        background-color: $hover-color;
+        transition: background-color $animation-duration ease; // Suaviza el cambio de color
+      }
+
+      td {
+        padding: 10px;
+        border-bottom: 1px solid $border-color;
+        transition: background-color $animation-duration ease, transform $animation-duration ease; // Transiciones suaves
+        animation: fadeIn $animation-duration ease; // Animación al cargar cada fila
+      }
+    }
+  }
+
+  th, td {
+    border: 1px solid $border-color;
+  
+  }
+  td{
+    background-color: #d7d7d7;
+  }
+  td:hover{
+    background-color: #b1b0b0;
+  }
+}
+
+// Animaciones personalizadas
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Diseño responsivo
+@media screen and (max-width: 600px) {
+  table {
+    font-size: 14px;
+    thead {
+      display: none;
+    }
+
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: 10px;
+        border: 1px solid $border-color;
+        animation: fadeIn $animation-duration ease; // Animación de aparición
+
+        td {
+          display: block;
+          text-align: right;
+          padding-left: 50%;
+          position: relative;
+
+          &:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+            font-weight: bold;
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Estados</th>
+            <th>Estados Finales</th>
+            <th>Alfabeto de Entrada</th>
+            <th>Alfabeto de Cinta</th>
+            <th>Transiciones</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (machine of dataTable; track machine.id) {
+        <tr>
+            <td data-label="ID">{{ machine.id }}</td>
+            <td data-label="Estados">{{ machine.estados }}</td>
+            <td data-label="estadosFinales">{{ machine.estadosFinales }}</td>
+            <td>{{ machine.alfabetoEntrada }}</td>
+            <td>{{ machine.alfabetoCinta }}</td>
+            <td>{{ machine.transiciones }}</td>
+            <td></td>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -15,7 +15,7 @@ export interface TuringMachine {
     estadosFinales: string;
     alfabetoEntrada: string;
     alfabetoCinta: string;
-    transicionesAutomata: TransicionAutomata[]; // Listado de transiciones automata
+    transiciones:string;
 }
 
 // src/app/models/datos-automata.model.ts

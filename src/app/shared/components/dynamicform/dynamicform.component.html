@@ -42,10 +42,24 @@
       title="{{ field.title }}" type="textarea" (input)="valueChangedAlphabet($event)"></textarea>
     <mat-hint class="txt-hint">Debe ingresar los datos separados por comas (,)</mat-hint>
     }
+    @case ("text-transitions") {
+    <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
+      title="{{ field.title }}" type="textarea"></textarea>
+    <ol>
+      <li>
+        <mat-hint class="txt-hint">{{field.hint[0]}}</mat-hint>
+      </li>
+      <li>
+        <mat-hint class="txt-hint">{{field.hint[1]}}</mat-hint>
+      </li>
+      <li>
+        <mat-hint class="txt-hint">{{field.hint[2]}}</mat-hint>
+      </li>
+    </ol>
+    }
     @case ("text-tape") {
     <textarea [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
       title="{{ field.title }}" type="textarea" [value]="field.value" (input)="onInputTextTape($event)"></textarea>
-    <mat-hint class="txt-hint">Debe ingresar los datos separados por comas (,)</mat-hint>
     }
     @case ("number") {
     <input [formControlName]="field.name" [placeholder]="field.placeholder" [readonly]="field.readOnly || false"
@@ -111,7 +125,7 @@
         <hot-table [settings]="settings" [hotId]="'my-handsontable'" #hotTableRef [data]="this.generateData()"
           [rowHeaders]="this.customRowHeaders" [colHeaders]="this.customColumnHeaders">
         </hot-table>
-        <button mat-flat-button class="mt-4 align-middle justify-end">Guardar Data</button>
+        <!--  <button mat-flat-button class="mt-4 align-middle justify-end">Guardar Data</button> -->
       </form>
     </div>
     }

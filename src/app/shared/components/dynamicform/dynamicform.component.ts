@@ -166,29 +166,18 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
       estadosFinales: data['Estados Finales'],
       alfabetoCinta: data!['Alfabeto Cinta'],
       alfabetoEntrada: data['Alfabeto de Entrada'],
-      transicionesAutomata: data['Transiciones'],
+      transiciones: data['Transiciones'],
     };
 
-    const transiciones: TransicionAutomata[] = this.TRANSICIONES.map(
-      (t, index) => ({
-        idDatosAutomata: 0, // Se asignará después de crear los datos del autómata
-        fila: Math.floor(index / this.estados.length),
-        columna: index % this.estados.length,
-        valor: ``,
-        idDatosAutomataNavigation: turingMachine,
-      })
-    );
 
-    turingMachine.transicionesAutomata = transiciones.map((t) => t.valor);
 
-    console.log(data['Alfabeto de la Cinta']);
+    console.log(data['Transiciones']);
 
     let res = await this.turingMachineService
       .createTuringMachine(turingMachine)
       .subscribe({
         next: (response) => {
           console.log('Maquina de turing creada exitosamente!', response);
-          this.submitTransitions(transiciones, response?.id);
         },
         error: (error) => {
           console.error('Error al crear la Maquina de Turing:', error);
@@ -225,7 +214,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
       } else if (field.name === 'Estado Inicial Q0') {
         group[field.name] = new FormControl({ value: 'q0', disabled: true });
       } else if (field.name === 'Simbolo Blanco') {
-        group[field.name] = new FormControl({ value: '#', disabled: true });
+        group[field.name] = new FormControl({ value: 'null', disabled: true });
       } else if (field.name === 'Estados Finales') {
         const estadosFinalesGroup = this.fb.group({});
         this.optionState.forEach((option: checkbox) => {
@@ -254,7 +243,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
   setSelect(event: any) {
     let options = event.target.value.split(',');
     this.optionState = options
-      .filter((option: string) => option !== 'q0')
+/*       .filter((option: string) => option !== 'q0') */
       .map((option: string) => ({
         name: option,
         label: option,
@@ -366,3 +355,4 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
     colHeaders: this.customColumnHeaders,
   };
 }
+/* TODO: FALTA ARREGLAR GUARDAR TRANSICIONES */

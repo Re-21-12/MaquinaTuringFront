@@ -212,7 +212,18 @@ export const Forms: any[] = [
       },
 
       {
-        /* Las transiciones van en la tabla */
+        name: 'Transiciones',
+        type: 'text-transitions',
+        label: 'Transiciones',
+        placeholder: 'q0 a q1 a S',
+        required: true,
+        hint: [
+          'S: State, L: Left, R:Right',  
+          'La estructura consta de: [Estado, Leer, Nuevo, Escribir, Movimiento]',
+          'Debe ir separada por comas',
+        ],
+      },
+      {
         name: 'Transiciones (q0,S,L/S/R)',
         type: 'table',
         label: 'Transiciones (q0,S,L/S/R)',
