@@ -1,2 +1,5 @@
 <app-dynamicheader [titulo]="'Listado de Formularios'" [subtitulo]="'Maquina de Turing'"></app-dynamicheader>
+<button mat-raised-button (click)="clearTuringMachines()" class="flex justify-items-center mb-4 ">
+    <mat-icon class=" ">restore_from_trash</mat-icon>
+</button>
 <app-dynamictable [dataTable]="dataTable"></app-dynamictable>

@@ -14,11 +14,38 @@
         @for (machine of dataTable; track machine.id) {
         <tr>
             <td data-label="ID">{{ machine.id }}</td>
-            <td data-label="Estados">{{ machine.estados }}</td>
-            <td data-label="estadosFinales">{{ machine.estadosFinales }}</td>
-            <td>{{ machine.alfabetoEntrada }}</td>
+
+            <td data-label="Estados">
+                <ul>
+                    @for(estado of machine.estados.split(','); track estado ){
+                    <li>{{estado}}</li>
+                    }
+                </ul>
+            </td>
+
+            <td data-label="estadosFinales">
+                <ul>
+                    @for(estadoFinal of machine.estadosFinales.split(','); track estadoFinal ){
+                    <li>{{estadoFinal}}</li>
+                    }
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    @for(entrada of machine.alfabetoEntrada.split(','); track entrada ){
+                    <li>{{entrada}}</li>
+                    }
+                </ul>
+            </td>
             <td>{{ machine.alfabetoCinta }}</td>
-            <td>{{ machine.transiciones }}</td>
+            <td>
+                <ol>
+                    @for(transicion of machine.transiciones.split(','); track transicion ){
+
+                    <li>{{ transicion }}</li>
+                    }
+                </ol>
+            </td>
             <td><a mat-raised-button (click)="navigate(machine.id)">Ejecutar</a></td>
         </tr>
         }

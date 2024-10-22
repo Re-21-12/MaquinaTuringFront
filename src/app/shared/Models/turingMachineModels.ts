@@ -33,6 +33,7 @@ export interface DatosMaquinaTuring {
     'Estados Finales': string;
     'Alfabeto de Entrada': string;
     'Alfabeto Cinta': string;
+    'Transiciones' : string;
 }
 
 export interface MAQUINA_TURING {

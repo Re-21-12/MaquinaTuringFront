@@ -18,6 +18,9 @@ export class DynamictableComponent {
 navigate(id:any){
   this.router.navigate([`execute/${id}`])
 }
+
+
+
 }
 
 

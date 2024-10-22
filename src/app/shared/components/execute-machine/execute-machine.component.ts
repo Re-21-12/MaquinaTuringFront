@@ -4,13 +4,14 @@ import { MachinesService } from '../../../api/turing-machine/machines.service';
 import { TuringMachine } from '../../Models/turingMachineModels';
 import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-execute-machine',
-  standalone:true,
-  imports:[HttpClientModule, MatIconModule],
+  standalone: true,
+  imports: [HttpClientModule, MatIconModule],
   templateUrl: './execute-machine.component.html',
   styleUrls: ['./execute-machine.component.scss'],
-  providers:[MachinesService]
+  providers: [MachinesService],
 })
 export class ExecuteMachineComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -24,6 +25,8 @@ export class ExecuteMachineComponent implements OnInit {
   resultMessage: string = ''; // Mensaje de resultado
   isAccepted: boolean = false; // Indica si la cadena es aceptada
   transitionRules: any[] = []; // Reglas de transición
+  executeMachine: any;
+  turingMachines: any;
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
@@ -31,72 +34,198 @@ export class ExecuteMachineComponent implements OnInit {
   }
 
   async getMachineById(id: any) {
+    // Intentar obtener la máquina de Turing desde localStorage
+    const storedMachine = localStorage.getItem(`turingMachines`);
+
+    if (storedMachine) {
+      // Si hay una máquina almacenada, parsearla y asignarla
+      this.turingMachines = JSON.parse(storedMachine);
+
+      this.turingMachines.forEach((element: any) => {
+        console.log(
+          'Se obtuvo la máquina de Turing desde localStorage',
+          element
+        );
+        if (element.id == id) {
+          console.log(
+            'Se obtuvo la máquina de Turing desde localStorage',
+            element
+          );
+          this.turing_machine = element;
+        }
+      });
+      console.log(
+        'Se obtuvo la máquina de Turing desde localStorage',
+        this.turing_machine
+      );
+
+      this.initializeTapeAndTransitions();
+    } else {
+      // Si no hay máquina almacenada, realizar la llamada al servicio
+      this.turingMachineService.getTuringMachine(id).subscribe({
+        next: (response) => {
+          console.log(
+            'Se obtuvo la máquina de Turing desde el servicio',
+            response
+          );
+          this.turing_machine = response;
+
+          // Guardar la máquina en localStorage para futuros accesos
+          localStorage.setItem(`turingMachine_${id}`, JSON.stringify(response));
+
+          this.initializeTapeAndTransitions();
+        },
+        error: (error) => {
+          console.error('Error al obtener la máquina de Turing:', error);
+        },
+      });
+    }
+  }
+
+  /*   async getMachineById(id: any) {
     this.turingMachineService.getTuringMachine(id).subscribe({
       next: (response) => {
         console.log('Se obtuvo la máquina de Turing', response);
         this.turing_machine = response;
-
-        // Inicializar la cinta y las reglas de transición
         this.initializeTapeAndTransitions();
       },
       error: (error) => {
         console.error('Error al obtener la máquina de Turing:', error);
       },
     });
+  } */
+
+
+  findFirstIndexTape(words: string[]) {
+    console.log(words)
+    for(let word of words){
+      if(word.length == 1){
+        console.log(words.indexOf(word));
+        return words.indexOf(word);
+      }
+    }
+    console.log(0);
+    return 0
   }
 
   initializeTapeAndTransitions() {
-    this.tape = new Array(20).fill(' '); // Inicializar cinta con 20 espacios vacíos
-    const inputSymbols = this.turing_machine.alfabetoEntrada.split(',');
-    this.tape.splice(0, inputSymbols.length, ...inputSymbols); // Insertar símbolos de entrada en la cinta
-    this.headPosition = 0; // Colocar el cabezal en la primera posición
-    this.currentState = this.turing_machine.estados.split(',')[0]; // Establecer estado inicial
-    this.transitionRules = this.parseTransitions(this.turing_machine.transiciones); // Parsear las transiciones
+    this.tape = new Array(30).fill('null');
+
+    console.log(this.turing_machine.alfabetoCinta);
+
+    const inputSymbols = this.turing_machine.alfabetoCinta;
+    console.log('Símbolos de entrada:', inputSymbols);
+
+    let newTape = this.tape.splice(
+      0,
+      inputSymbols.length,
+      ...new Array(30).fill('null').concat(inputSymbols.split(''))
+    );
+    this.headPosition = this.findFirstIndexTape(this.tape);
+    this.currentState = this.turing_machine.estados.split(',')[0].trim();
+    this.transitionRules = this.parseTransitions(
+      this.turing_machine.transiciones
+    );
+    this.isAccepted = false;
+    this.resultMessage = '';
   }
 
   parseTransitions(transitions: string): any[] {
-    return transitions.split(',').map(transition => {
-      const [fromState, symbol, toState, direction] = transition.trim().split(' ');
-      return { fromState, symbol, toState, direction };
+    return transitions.split(',').map((transition) => {
+      const [fromState, read, toState, write, direction] = transition
+        .trim()
+        .split(' ');
+      return { fromState, read, toState, write, direction };
     });
   }
 
   step() {
     const currentSymbol = this.tape[this.headPosition];
-    const transition = this.transitionRules.find(t => t.fromState === this.currentState && t.symbol === currentSymbol);
+
+    // Corregimos la búsqueda de transición
+    const transition = this.transitionRules.find(
+      (t) => t.fromState === this.currentState && t.read === currentSymbol
+    );
+
+    console.log('Estado actual:', this.currentState);
+    console.log('Símbolo actual:', currentSymbol);
+    console.log('Transición encontrada:', transition);
 
     if (transition) {
+      // Escribir el nuevo símbolo en la cinta
+      this.tape[this.headPosition] = transition.write;
+
+      // Actualizar el estado
       this.currentState = transition.toState;
-      this.tape[this.headPosition] = transition.symbol; // Actualizar símbolo en la cinta
-      this.headPosition += (transition.direction === 'D' ? 1 : -1); // Mover cabezal
-      this.headPosition = Math.max(0, Math.min(this.tape.length - 1, this.headPosition)); // Limitar posición del cabezal
+
+      // Mover el cabezal según la dirección
+      switch (transition.direction) {
+        case 'R':
+          this.headPosition++;
+          break;
+        case 'L':
+          this.headPosition--;
+          break;
+        case 'S':
+          // No mover el cabezal
+          break;
+        default:
+          console.error('Dirección no válida:', transition.direction);
+      }
+
+      // Asegurar que el cabezal no se salga de los límites
+      this.headPosition = Math.max(
+        0,
+        Math.min(this.tape.length - 1, this.headPosition)
+      );
+
       this.checkAcceptance();
-    } else {
-      this.resultMessage = 'No hay transición definida para el estado y símbolo actuales.';
-    }
+    } 
   }
 
   run() {
-    while (!this.isAccepted && this.headPosition >= 0 && this.headPosition < this.tape.length) {
+    let maxSteps = 1000; // Límite de seguridad para evitar bucles infinitos
+    let steps = 0;
+
+    while (
+      !this.isAccepted &&
+      this.headPosition >= 0 &&
+      this.headPosition < this.tape.length &&
+      steps < maxSteps
+    ) {
+      const currentSymbol = this.tape[this.headPosition];
+      const transition = this.transitionRules.find(
+        (t) => t.fromState === this.currentState && t.read === currentSymbol
+      );
+
+      if (!transition) {
+        this.resultMessage = 'No hay más transiciones disponibles.';
+        break;
+      }
+
       this.step();
+      steps++;
+    }
+
+    if (steps >= maxSteps) {
+      this.resultMessage = 'Se alcanzó el límite máximo de pasos.';
     }
   }
 
   checkAcceptance() {
-    const finalStates = this.turing_machine.estadosFinales.split(',');
+    const finalStates = this.turing_machine.estadosFinales
+      .split(',')
+      .map((state) => state.trim());
+
     if (finalStates.includes(this.currentState)) {
       this.isAccepted = true;
       this.resultMessage = 'Cadena aceptada.';
     } else if (this.headPosition < 0 || this.headPosition >= this.tape.length) {
       this.resultMessage = 'Cadena rechazada.';
-    } else {
-      this.resultMessage = ''; // Sin mensaje en caso de continuar
     }
   }
 
   reset() {
     this.initializeTapeAndTransitions();
-    this.resultMessage = '';
-    this.isAccepted = false;
   }
 }

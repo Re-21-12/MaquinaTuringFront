@@ -79,6 +79,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
       'Estados Finales': '',
       'Alfabeto de Entrada': '',
       'Alfabeto Cinta': '',
+      'Transiciones': '',
     },
     transiciones: this.TRANSICIONES,
   };
@@ -135,20 +136,42 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
   onSubmit() {
     if (this.form.valid) {
       const formValue = { ...this.form.value };
-
+  
       // Process Estados Finales
       if (formValue['Estados Finales']) {
         formValue['Estados Finales'] = Object.keys(formValue['Estados Finales'])
           .filter((key) => formValue['Estados Finales'][key])
           .join(',');
       }
-
+  
       // Process other fields as needed
       this.MAQUINA_TURING.datos = formValue;
-      console.log(this.MAQUINA_TURING.datos);
-
+      
+      const localStorageItem = localStorage.getItem('turingMachines');
+      let existingMachines = localStorageItem ? JSON.parse(localStorageItem) : [];
+      const idMachine = existingMachines.length + 1; // Asignar un nuevo ID
+  
+      // Crear el objeto de máquina de Turing
+      const parsedMachines = {
+        id: idMachine,
+        estados: this.MAQUINA_TURING.datos['Estados'],
+        estadosFinales: this.MAQUINA_TURING.datos['Estados Finales'],
+        alfabetoEntrada: this.MAQUINA_TURING.datos['Alfabeto de Entrada'],
+        alfabetoCinta: this.MAQUINA_TURING.datos['Alfabeto Cinta'],
+        transiciones: this.MAQUINA_TURING.datos['Transiciones']
+      };
+  
+      console.log(parsedMachines);
+  
+      // Agregar la nueva máquina a la lista existente
+      existingMachines.push(parsedMachines);
+      
+      // Guardar la lista actualizada en localStorage
+      localStorage.setItem('turingMachines', JSON.stringify(existingMachines));
+  
+      // Llamar a la función para enviar la máquina de Turing
       this.submitTuringMachine(this.MAQUINA_TURING.datos);
-      /*  this.formSubmit.emit(formValue); */
+      /* this.formSubmit.emit(formValue); */
     } else {
       console.error('Formulario inválido');
       Object.keys(this.form.controls).forEach((key) => {
@@ -159,6 +182,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
       });
     }
   }
+  
 
   async submitTuringMachine(data: any) {
     const turingMachine = {
@@ -186,6 +210,23 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   submitTransitions(
+  transiciones: TransicionAutomata[],
+  idDatosAutomata: number | undefined
+) {
+  // Crear un array para almacenar las transiciones que se van a guardar en localStorage
+  const storedTransitions = transiciones.map((transicion) => {
+    if (idDatosAutomata) transicion.idDatosAutomata = idDatosAutomata;
+    return transicion;
+  });
+
+  // Guardar las transiciones en localStorage
+  localStorage.setItem('transitions', JSON.stringify(storedTransitions));
+
+  // Confirmación en consola
+  console.log('Transiciones almacenadas en localStorage:', storedTransitions);
+}
+
+/*   submitTransitions(
     transiciones: TransicionAutomata[],
     idDatosAutomata: number | undefined
   ) {
@@ -200,7 +241,7 @@ export class DynamicFormComponent implements OnInit, AfterViewInit, OnChanges {
         },
       });
     });
-  }
+  } */
 
   initializeForm() {
     const group: any = {};

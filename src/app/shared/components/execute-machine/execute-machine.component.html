@@ -1,15 +1,17 @@
 <div class="turing-machine bg-white rounded-md">
     <div class="visualization-area">
-        <div class="tape">
+        <div class="tape flex flex-wrap">
             @for(cell of tape; track i; let i = $index) {
+
             <span [class.head]="i === headPosition" [class.accepted]="isAccepted && i === tape.length - 1">
+                @if(cell === 'null'){
+
+                }@else {
                 {{ cell }}
+                }
             </span>
             }
-            @if(headPosition >= 0 && headPosition < tape.length){ <!-- Flecha que indica la posición del cabezal -->
-                <!-- Ajusta el valor 30 según el ancho de tu celda -->
-                <mat-icon class="arrow" [style.left.px]="headPosition * 40 + 5">arrow_drop_down</mat-icon>
-                }
+
         </div>
         <div class="head text-center">Cabezal: {{ currentState }}</div>
     </div>
@@ -22,12 +24,34 @@
 
     <div class="simulation-info flex justify-between gap-4">
         <div class="w-1/2">
-            <p>Estado Actual: {{ currentState }}</p>
-            <p>Contenido de la Cinta: {{ tape.join('') }}</p>
+            <b>Estados</b>
+            <ul>
+                @for(estado of this.turing_machine.estados.split(','); track i; let i = $index) {
+                <li>
+                    {{ estado }}
+                </li>
+                }
+            </ul>
+            <p><b>Estado Actual</b> {{ currentState }}</p>
+            <p><b>Estados finales</b> {{ this.turing_machine.estadosFinales }}</p>
+            <!--    <p><b>Contenido de la Cinta</b> {{ tape.join('') }}</p> -->
         </div>
         <div class="w-1/2">
-            <p>Posición del Cabezal: {{ headPosition }}</p>
-            <p>Resultado: {{ resultMessage }}</p>
+            <p><b>Posición del Cabezal</b> {{ headPosition }}</p>
+
+            <p><b>Alfabeto de Entrada</b> {{ this.turing_machine.alfabetoEntrada }}</p>
+
+            <p><b>Resultado</b> {{ resultMessage }}</p>
+
+            <p><b>Transiciones</b></p>
+
+            <ul>
+                @for(transicion of this.turing_machine.transiciones.split(','); track i; let i = $index) {
+                <li>
+                    {{ transicion.replace(' ', ' -> ') }}
+                </li>
+                }
+            </ul>
         </div>
     </div>
 </div>
