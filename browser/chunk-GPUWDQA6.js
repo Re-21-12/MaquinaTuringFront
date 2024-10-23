@@ -1,0 +1,1 @@
+import{Rb as i,Yb as s,ga as n,wb as a,xb as m}from"./chunk-M7DIKWBA.js";var t=class o{static \u0275fac=function(e){return new(e||o)};static \u0275cmp=n({type:o,selectors:[["app-home"]],standalone:!0,features:[s],decls:2,vars:0,template:function(e,r){e&1&&(a(0,"h1"),i(1,"Bienvenido a Nuestra MAQUINA DE TURING"),m())}})};export{t as default};
