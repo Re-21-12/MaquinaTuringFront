@@ -1,0 +1,5 @@
+<app-dynamicheader [titulo]="'Formulario'" [subtitulo]="'Maquina de turing'"></app-dynamicheader>
+<div class="">
+    <app-dynamic-form [formName]="'turingForm'" [submit_text]="'Subir'"
+        (formSubmit)="submit($event)"></app-dynamic-form>
+</div>

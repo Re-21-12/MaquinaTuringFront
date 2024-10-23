@@ -1,0 +1,49 @@
+<mat-nav-list>
+  <!-- Opción Home -->
+  <mat-list-item>
+    <a class="menu-icons" [routerLink]="['/home']" routerLinkActive="router-link-active">
+      <mat-icon>home</mat-icon>
+      <span>Inicio</span>
+    </a>
+  </mat-list-item>
+  <!-- Opción Listar -->
+  <mat-list-item>
+    <a class="menu-icons" [routerLink]="['/list']" routerLinkActive="router-link-active">
+      <mat-icon>format_list_numbered</mat-icon>
+      <span>Listar Maquinas de Turing</span>
+    </a>
+  </mat-list-item>
+
+  <!-- Opción Formulario con submenú -->
+  <mat-list-item (click)="toggleFormMenu()">
+    <a class="menu-icons">
+      <mat-icon>dynamic_form</mat-icon>
+      <span>Formulario</span>
+      <mat-icon class="expand-icon">{{
+        isFormMenuOpen ? "expand_less" : "expand_more"
+        }}</mat-icon>
+    </a>
+  </mat-list-item>
+
+  <!-- Submenú del Formulario -->
+  @if(isFormMenuOpen){
+  <ng-container>
+    <mat-list-item>
+      <a class="submenu-icons" [routerLink]="['/form']" routerLinkActive="router-link-active">
+        <mat-icon>subdirectory_arrow_right</mat-icon>
+        <span>Nueva Maquina de Turing</span>
+      </a>
+    </mat-list-item>
+  </ng-container>
+  }
+
+  <mat-divider></mat-divider>
+
+  <!-- Opción Documentación -->
+  <mat-list-item>
+    <a class="menu-icons" [routerLink]="['/doc']" routerLinkActive="router-link-active">
+      <mat-icon>document_scanner</mat-icon>
+      <span>Documentación</span>
+    </a>
+  </mat-list-item>
+</mat-nav-list>

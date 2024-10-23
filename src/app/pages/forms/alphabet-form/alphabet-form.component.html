@@ -1,0 +1,5 @@
+<app-dynamicheader [titulo]="'Formulario'" [subtitulo]="'Formulario de Alfabeto'" class="fixed"></app-dynamicheader>
+<section>
+    <app-dynamic-form [formName]="'alphabetForm'" [submit_text]="'Subir'"
+        (formSubmit)="submit($event)"></app-dynamic-form>
+</section>
