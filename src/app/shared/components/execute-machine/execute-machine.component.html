@@ -20,11 +20,38 @@
         <button (click)="step()">Paso</button>
         <button (click)="run()">Ejecutar hasta el final</button>
         <button (click)="reset()">Reiniciar</button>
+
     </div>
 
     <div class="simulation-info flex justify-between gap-4">
-        <div class="w-1/2">
-            <b>Estados</b>
+        <div class="w-1/3">
+            <mat-label><b>Alfabeto de la cinta ⌈</b></mat-label>
+            <form>
+                <mat-form-field>
+                    <input type="text" matInput [(ngModel)]="turing_machine.alfabetoCinta"
+                        (ngModelChange)="initializeTapeAndTransitions()" placeholder="Cadena a evaluar"
+                        name="alfabetoCinta" />
+                </mat-form-field>
+
+            </form>
+            <mat-label><b>Cantidad Nulos b</b></mat-label>
+            <form>
+                <mat-form-field>
+                    <input type="number" matInput [(ngModel)]="this.nullSize"
+                        (ngModelChange)="initializeTapeAndTransitions()" placeholder="Cantidad de nulos"
+                        name="alfabetoCinta" />
+                </mat-form-field>
+
+            </form>
+            <b>Alfabeto de Entrada Σ</b>
+            <p>{{ this.turing_machine.alfabetoEntrada }}</p>
+
+        </div>
+        <div class="w-1/3">
+
+            <b>Estados Q</b>
+            <hr>
+
             <ul>
                 @for(estado of this.turing_machine.estados.split(','); track i; let i = $index) {
                 <li>
@@ -32,18 +59,31 @@
                 </li>
                 }
             </ul>
-            <p><b>Estado Actual</b> {{ currentState }}</p>
-            <p><b>Estados finales</b> {{ this.turing_machine.estadosFinales }}</p>
+            <hr>
+            <p><b>Estado Actual Q</b> {{ currentState }}</p>
+            <hr>
+            <p><b>Estado Inicial q0</b>q0</p>
+            <hr>
+            <p><b>Estados finales λ</b> {{ this.turing_machine.estadosFinales }}</p>
             <!--    <p><b>Contenido de la Cinta</b> {{ tape.join('') }}</p> -->
         </div>
-        <div class="w-1/2">
+        <div class="w-1/3">
             <p><b>Posición del Cabezal</b> {{ headPosition }}</p>
 
-            <p><b>Alfabeto de Entrada</b> {{ this.turing_machine.alfabetoEntrada }}</p>
+            <b>Resultado</b>
+            <p class="bg-gray-200 p-4 rounded-md shadow-md">
+                <b [ngClass]="isAccepted ? 'text-teal-500' : 'text-orange-600'">
+                    {{ resultMessage }}
+                    @if(isAccepted){
+                    <mat-icon [ngClass]="'text-teal-500'">whatshot</mat-icon>
+                    }@else {
+                    <mat-icon [ngClass]="'text-orange-600'">flash_off</mat-icon>
+                    }
+                </b>
+            </p>
 
-            <p><b>Resultado</b> {{ resultMessage }}</p>
 
-            <p><b>Transiciones</b></p>
+            <p><b>Transiciones δ</b></p>
 
             <ul>
                 @for(transicion of this.turing_machine.transiciones.split(','); track i; let i = $index) {

@@ -4,11 +4,15 @@ import { MachinesService } from '../../../api/turing-machine/machines.service';
 import { TuringMachine } from '../../Models/turingMachineModels';
 import { HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCommonModule } from '@angular/material/core';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-execute-machine',
   standalone: true,
-  imports: [HttpClientModule, MatIconModule],
+  imports: [HttpClientModule, MatIconModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatCommonModule, CommonModule],
   templateUrl: './execute-machine.component.html',
   styleUrls: ['./execute-machine.component.scss'],
   providers: [MachinesService],
@@ -27,6 +31,7 @@ export class ExecuteMachineComponent implements OnInit {
   transitionRules: any[] = []; // Reglas de transición
   executeMachine: any;
   turingMachines: any;
+  nullSize: number = 30;
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
@@ -109,9 +114,7 @@ export class ExecuteMachineComponent implements OnInit {
   }
 
   initializeTapeAndTransitions() {
-    this.tape = new Array(30).fill('null');
-
-    console.log(this.turing_machine.alfabetoCinta);
+    this.tape = new Array(this.nullSize).fill('null');
 
     const inputSymbols = this.turing_machine.alfabetoCinta;
     console.log('Símbolos de entrada:', inputSymbols);
@@ -119,7 +122,7 @@ export class ExecuteMachineComponent implements OnInit {
     let newTape = this.tape.splice(
       0,
       inputSymbols.length,
-      ...new Array(30).fill('null').concat(inputSymbols.split(''))
+      ...new Array(this.nullSize).fill('null').concat(inputSymbols.split(''))
     );
     this.headPosition = this.findFirstIndexTape(this.tape);
     this.currentState = this.turing_machine.estados.split(',')[0].trim();
@@ -179,8 +182,8 @@ export class ExecuteMachineComponent implements OnInit {
         Math.min(this.tape.length - 1, this.headPosition)
       );
 
-      this.checkAcceptance();
     } 
+    this.checkAcceptance();
   }
 
   run() {

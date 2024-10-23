@@ -7,7 +7,7 @@
             <th>Alfabeto de Entrada</th>
             <th>Alfabeto de Cinta</th>
             <th>Transiciones</th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -46,7 +46,13 @@
                     }
                 </ol>
             </td>
-            <td><a mat-raised-button (click)="navigate(machine.id)">Ejecutar</a></td>
+            <td>
+                <button mat-raised-button (click)="openDialog(machine.id)"
+                    class=""><mat-icon>horizontal_split</mat-icon>
+                    <b>Opciones</b>
+                </button>
+
+            </td>
         </tr>
         }
     </tbody>
